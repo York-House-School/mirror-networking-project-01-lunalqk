@@ -15,6 +15,9 @@ public class PlayerController : NetworkBehaviour {
 	[Header("Player speed")]
 	[SerializeField] float PlayerSpeed;
 	[SerializeField] float PlayerSpeedMax;
+	[SerializeField] Vector3 jump;
+    [SerializeField] float jumpForce = 2.0f;
+	[SerializeField] bool isGrounded;
 
 	[Header("Sensitivity")]
 	[SerializeField] float sensitivityX = 1f;
@@ -49,6 +52,8 @@ public class PlayerController : NetworkBehaviour {
 	void Start () {
 		anim = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody>();
+		
+		//jump = new Vector3(0.0f, 2.0f, 0.0f);
 		
 		if (isLocalPlayer) {
 
@@ -91,6 +96,11 @@ public class PlayerController : NetworkBehaviour {
 				anim.SetBool("isRunning", false);
 			}
 			
+			if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+				rb.AddForce(jump * jumpForce, ForceMode.Impulse);
+				isGrounded = false;
+			}
+			
 			MouseLook();
 
 			if (Input.GetMouseButtonDown(0)) {
@@ -111,6 +121,11 @@ public class PlayerController : NetworkBehaviour {
 			}
 		}
 		
+	}
+	
+	
+	void OnCollisionStay() {
+		isGrounded = true;
 	}
 
 
