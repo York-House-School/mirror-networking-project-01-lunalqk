@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlayerController : NetworkBehaviour {
 	
+	[Header("Spawn")]
+	[SerializeField] GameObject[] spawnLocations;
+	
 	[Header("Player stats")]
     [SyncVar] public int Health = 100;
     [SyncVar] public int HealthMax = 100;
@@ -26,8 +29,8 @@ public class PlayerController : NetworkBehaviour {
 	[SerializeField] float minCameraX = -80f;
 
 	[Header("Weapon")]
-	[SyncVar] int AmmoCountMax = 20;
-	[SyncVar] public int AmmoCount = 20;
+	[SyncVar] int AmmoCountMax = 30;
+	[SyncVar] public int AmmoCount = 30;
 	[SyncVar] bool Reloading;
 	[SerializeField] double reloadTime = 2;
 	[SerializeField] int weaponDamage = 1;
@@ -54,6 +57,9 @@ public class PlayerController : NetworkBehaviour {
 		rb = GetComponent<Rigidbody>();
 		
 		//jump = new Vector3(0.0f, 2.0f, 0.0f);
+		
+		spawnLocations = GameObject.FindGameObjectsWithTag("SpawnPoint");
+		SpawnPlayer();
 		
 		if (isLocalPlayer) {
 
@@ -126,6 +132,11 @@ public class PlayerController : NetworkBehaviour {
 	
 	void OnCollisionStay() {
 		isGrounded = true;
+	}
+	
+	void SpawnPlayer() {
+		int loc = Random.Range(0, spawnLocations.Length);
+		this.transform.position = spawnLocations[loc].transform.position;
 	}
 
 
@@ -349,7 +360,8 @@ public class PlayerController : NetworkBehaviour {
         CanvasManager.instance.ChangePlayerState(true);
 		CanvasManager.instance.UpdateHP(Health, HealthMax);
         //set position
-        //transform.position = NetworkManagerFPS.singleton.GetStartPosition().position;
+        //transform.position = NetworkManagerFPS.singleton.GetStartPosition().position
+		SpawnPlayer();
 
     }
 	
