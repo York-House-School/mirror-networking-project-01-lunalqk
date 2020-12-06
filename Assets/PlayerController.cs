@@ -137,6 +137,7 @@ public class PlayerController : NetworkBehaviour {
 	void SpawnPlayer() {
 		int loc = Random.Range(0, spawnLocations.Length);
 		this.transform.position = spawnLocations[loc].transform.position;
+		this.transform.rotation = spawnLocations[loc].transform.rotation;
 	}
 
 
