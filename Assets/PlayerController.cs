@@ -213,7 +213,7 @@ public class PlayerController : NetworkBehaviour {
 
     }
 	
-	[TargetRpc]
+	[ClientRpc]
     void TargetShoot() {
         //We shot successfully.
         //Update UI
@@ -234,6 +234,12 @@ public class PlayerController : NetworkBehaviour {
         //NetworkIdentity.spawned[shooterID].GetComponent<PlayerController>().MuzzleFlash();
 
     }
+	
+	
+	
+	
+	
+	
 	
 	[Server]
     public void Damage(int amount, uint shooterID) {
@@ -301,15 +307,15 @@ public class PlayerController : NetworkBehaviour {
         if(Reloading || AmmoCount != AmmoCountMax)
             CmdTryReload();
     }
-
-    [Command]
+	
+	[Command]
     void CmdTryReload() {
         if (Reloading || AmmoCount == AmmoCountMax)
             return;
 
         StartCoroutine(reloadingWeapon());
     }
-
+	
     IEnumerator reloadingWeapon() {
         Reloading = true;
         yield return new WaitForSeconds((float)reloadTime);
