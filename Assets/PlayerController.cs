@@ -93,7 +93,8 @@ public class PlayerController : NetworkBehaviour {
 		}
 		
 		curCooldown -= Time.deltaTime;
-		
+
+
 		if (!isDead) {
 			if (Input.GetKey("w")||Input.GetKey("a")||Input.GetKey("s")||Input.GetKey("d")) {
 				anim.SetBool("isRunning", true);
@@ -213,7 +214,7 @@ public class PlayerController : NetworkBehaviour {
 
     }
 	
-	[ClientRpc]
+	[TargetRpc]
     void TargetShoot() {
         //We shot successfully.
         //Update UI
