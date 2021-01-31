@@ -1590,8 +1590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3637afeae3ea514d81d8ab908081fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localPlayer: {fileID: 4763713099752645906, guid: 04f0e646947f46d49a24409023704761,
-    type: 3}
+  localPlayer: {fileID: 0}
   UI_Alive: {fileID: 1624843362}
   UI_Death: {fileID: 1270187407}
   UI_GameOver: {fileID: 734211363}

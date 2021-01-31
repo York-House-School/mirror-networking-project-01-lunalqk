@@ -51,6 +51,7 @@ public class PlayerController : NetworkBehaviour {
 	float xRotation;
 	float curCooldown;
 	Animator anim;
+	bool inRespawn = false;
 
 	void Start () {
 		anim = GetComponent<Animator>();
@@ -112,23 +113,32 @@ public class PlayerController : NetworkBehaviour {
 
 			if (Input.GetMouseButtonDown(0)) {
 				ShootButton();
+				Debug.Log("update" + AmmoCount);
 			}
 			
 			if(Input.GetKeyDown("r")) {
 				ReloadButton();
-			}	
+			}
+        }
+        else
+        {
+			CanvasManager.instance.ChangePlayerState(false);
 		}
 		
-		if (Kills >= 2) {
+		if (Kills >= 5) {
 			GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 			
 			foreach (GameObject p in players) {
-				p.GetComponent<PlayerController>().isDead = true;
+				p.GetComponent<PlayerController>().isDead = true;	
 				p.GetComponent<PlayerController>().CmdEndGame();
 			}
 		}
-		
+
+		CanvasManager.instance.AmmoCountText.text = AmmoCount.ToString() + "/" + AmmoCountMax.ToString();
+		CanvasManager.instance.UpdateHP(Health, HealthMax);
 	}
+
+	
 	
 	
 	void OnCollisionStay() {
@@ -183,7 +193,8 @@ public class PlayerController : NetworkBehaviour {
             //Do command
             CmdTryShoot(Camera.main.transform.forward, Camera.main.transform.position);
             curCooldown = WeaponCooldown;
-        }
+			Debug.Log("after" + AmmoCount);
+		}
     }
 	
 	[Command]
@@ -194,8 +205,8 @@ public class PlayerController : NetworkBehaviour {
             AmmoCount--;
             TargetShoot();
 
-            Ray ray = new Ray(clientCamPos, clientCam * 500);
-            Debug.DrawRay(clientCamPos, clientCam * 500, Color.red, 2f);
+			Ray ray = new Ray(clientCamPos, clientCam * 500);
+            //Debug.DrawRay(clientCamPos, clientCam * 500, Color.red, 2f);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit)) {
 
@@ -206,7 +217,6 @@ public class PlayerController : NetworkBehaviour {
                 }
                 else {
                     //RpcPlayerFired(GetComponent<NetworkIdentity>().netId, hit.point, hit.normal);
-
                 }
 
             }
@@ -216,9 +226,10 @@ public class PlayerController : NetworkBehaviour {
 	
 	[TargetRpc]
     void TargetShoot() {
-        //We shot successfully.
-        //Update UI
-        CanvasManager.instance.AmmoCountText.text = AmmoCount.ToString() + "/" + AmmoCountMax.ToString();
+		//We shot successfully.
+		//Update UI
+		Debug.Log("changed" + AmmoCount);
+		CanvasManager.instance.AmmoCountText.text = AmmoCount.ToString() + "/" + AmmoCountMax.ToString();
     }
 	
 	[ClientRpc]
@@ -250,7 +261,8 @@ public class PlayerController : NetworkBehaviour {
             Die();
             NetworkIdentity.spawned[shooterID].GetComponent<PlayerController>().Kills++;
             NetworkIdentity.spawned[shooterID].GetComponent<PlayerController>().TargetGotKill();
-        }
+			TargetGotDamage();
+		}
     }
 	
 	[TargetRpc]
@@ -270,7 +282,7 @@ public class PlayerController : NetworkBehaviour {
         isDead = true;
         Debug.Log("SERVER: Player died.");
         TargetDie();
-        //RpcPlayerDie();
+        RpcPlayerDie();
     }
 	
 	[TargetRpc]
@@ -303,7 +315,6 @@ public class PlayerController : NetworkBehaviour {
 	//
 	//RELOADING
 	//
-	[Client]
     internal void ReloadButton() {
         if(Reloading || AmmoCount != AmmoCountMax)
             CmdTryReload();
