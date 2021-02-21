@@ -53,6 +53,9 @@ public class PlayerController : NetworkBehaviour {
 	Animator anim;
 	bool inRespawn = false;
 
+
+	GameObject cameraRig;
+
 	void Start () {
 		anim = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody>();
@@ -60,6 +63,9 @@ public class PlayerController : NetworkBehaviour {
 		//jump = new Vector3(0.0f, 2.0f, 0.0f);
 		
 		spawnLocations = GameObject.FindGameObjectsWithTag("SpawnPoint");
+		cameraRig = GameObject.FindWithTag("OVRRig");
+
+
 		SpawnPlayer();
 		
 		if (isLocalPlayer) {
@@ -68,10 +74,13 @@ public class PlayerController : NetworkBehaviour {
 			Cursor.visible = false;
 
 			//Setup FPS camera.
-			Camera.main.transform.SetParent(transform);
+			cameraRig.transform.SetParent(transform);
+			cameraRig.transform.localPosition = cameraOffset;
+			cameraRig.transform.rotation = Quaternion.identity;
+			/*Camera.main.transform.SetParent(transform);
 			Camera.main.transform.localPosition = cameraOffset;
-			Camera.main.transform.rotation = Quaternion.identity;
-			
+			Camera.main.transform.rotation = Quaternion.identity;*/
+
 			CanvasManager.instance.ChangePlayerState(true);
 			CanvasManager.instance.UpdateHP(Health , HealthMax);
 			CanvasManager.instance.localPlayer = this;
@@ -97,28 +106,28 @@ public class PlayerController : NetworkBehaviour {
 
 
 		if (!isDead) {
-			if (Input.GetKey("w")||Input.GetKey("a")||Input.GetKey("s")||Input.GetKey("d")) {
+			/*if (Input.GetKey("w")||Input.GetKey("a")||Input.GetKey("s")||Input.GetKey("d")) {
 				anim.SetBool("isRunning", true);
 				MoveInput();
 			} else {
 				anim.SetBool("isRunning", false);
-			}
+			}*/
 			
-			if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+			if (OVRInput.GetDown(OVRInput.Button.One) && isGrounded) {
 				rb.AddForce(jump * jumpForce, ForceMode.Impulse);
 				isGrounded = false;
 			}
 			
-			MouseLook();
+			//MouseLook();
 
-			if (Input.GetMouseButtonDown(0)) {
+			/*if (Input.GetMouseButtonDown(0)) {
 				ShootButton();
 				Debug.Log("update" + AmmoCount);
 			}
 			
 			if(Input.GetKeyDown("r")) {
 				ReloadButton();
-			}
+			}*/
         }
         else
         {

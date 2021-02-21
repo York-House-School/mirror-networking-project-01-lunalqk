@@ -112,7 +112,8 @@ namespace Mirror
         /// <typeparam name="T">The message type to unregister.</typeparam>
         /// <param name="msg">The message to send.</param>
         /// <param name="channelId">The transport layer channel to send on.</param>
-        public void Send<T>(T msg, int channelId = Channels.DefaultReliable) where T : NetworkMessage
+        public void Send<T>(T msg, int channelId = Channels.DefaultReliable)
+            where T : struct, NetworkMessage
         {
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {
@@ -202,7 +203,8 @@ namespace Mirror
         /// <typeparam name="T">The message type to unregister.</typeparam>
         /// <param name="msg">The message object to process.</param>
         /// <returns>Returns true if the handler was successfully invoked</returns>
-        public bool InvokeHandler<T>(T msg, int channelId) where T : NetworkMessage
+        public bool InvokeHandler<T>(T msg, int channelId)
+            where T : struct, NetworkMessage
         {
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {
@@ -210,7 +212,7 @@ namespace Mirror
                 // this works because value types cannot be derived
                 // if it is a reference type (for example NetworkMessage),
                 // ask the message for the real type
-                int msgType = MessagePacker.GetId(default(T) != null ? typeof(T) : msg.GetType());
+                int msgType = MessagePacker.GetId<T>();
 
                 MessagePacker.Pack(msg, writer);
                 ArraySegment<byte> segment = writer.ToArraySegment();
@@ -219,42 +221,54 @@ namespace Mirror
             }
         }
 
-        // note: original HLAPI HandleBytes function handled >1 message in a while loop, but this wasn't necessary
-        //       anymore because NetworkServer/NetworkClient Update both use while loops to handle >1 data events per
-        //       frame already.
-        //       -> in other words, we always receive 1 message per Receive call, never two.
-        //       -> can be tested easily with a 1000ms send delay and then logging amount received in while loops here
-        //          and in NetworkServer/Client Update. HandleBytes already takes exactly one.
+        // helper function
+        protected bool UnpackAndInvoke(NetworkReader reader, int channelId)
+        {
+            if (MessagePacker.Unpack(reader, out int msgType))
+            {
+                // try to invoke the handler for that message
+                if (messageHandlers.TryGetValue(msgType, out NetworkMessageDelegate msgDelegate))
+                {
+                    msgDelegate.Invoke(this, reader, channelId);
+                    lastMessageTime = Time.time;
+                    return true;
+                }
+                else
+                {
+                    if (logger.LogEnabled()) logger.Log("Unknown message ID " + msgType + " " + this + ". May be due to no existing RegisterHandler for this message.");
+                    return false;
+                }
+            }
+            else
+            {
+                logger.LogError("Closed connection: " + this + ". Invalid message header.");
+                Disconnect();
+                return false;
+            }
+        }
+
         /// <summary>
         /// This function allows custom network connection classes to process data from the network before it is passed to the application.
         /// </summary>
         /// <param name="buffer">The data received.</param>
         internal void TransportReceive(ArraySegment<byte> buffer, int channelId)
         {
-            if (buffer.Count == 0)
+            if (buffer.Count < MessagePacker.HeaderSize)
             {
-                logger.LogError($"ConnectionRecv {this} Message was empty");
+                logger.LogError($"ConnectionRecv {this} Message was too short (messages should start with message id)");
+                Disconnect();
                 return;
             }
 
             // unpack message
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(buffer))
+            using (PooledNetworkReader reader = NetworkReaderPool.GetReader(buffer))
             {
-                if (MessagePacker.UnpackMessage(networkReader, out int msgType))
+                // the other end might batch multiple messages into one packet.
+                // we need to try to unpack multiple times.
+                while (reader.Position < reader.Length)
                 {
-                    // logging
-                    if (logger.LogEnabled()) logger.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count));
-
-                    // try to invoke the handler for that message
-                    if (InvokeHandler(msgType, networkReader, channelId))
-                    {
-                        lastMessageTime = Time.time;
-                    }
-                }
-                else
-                {
-                    logger.LogError("Closed connection: " + this + ". Invalid message header.");
-                    Disconnect();
+                    if (!UnpackAndInvoke(reader, channelId))
+                        break;
                 }
             }
         }
