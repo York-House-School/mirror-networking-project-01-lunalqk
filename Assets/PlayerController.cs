@@ -106,28 +106,37 @@ public class PlayerController : NetworkBehaviour {
 
 
 		if (!isDead) {
-			/*if (Input.GetKey("w")||Input.GetKey("a")||Input.GetKey("s")||Input.GetKey("d")) {
-				anim.SetBool("isRunning", true);
-				MoveInput();
-			} else {
-				anim.SetBool("isRunning", false);
-			}*/
-			
-			if (OVRInput.GetDown(OVRInput.Button.One) && isGrounded) {
+
+			Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+
+            if (stick.x != 0.0f || stick.y != 0.0f  )
+            {
+                anim.SetBool("isRunning", true);
+                MoveInput();
+            }
+            else
+            {
+                anim.SetBool("isRunning", false);
+            }
+
+            if (OVRInput.GetDown(OVRInput.Button.One) && isGrounded) {
 				rb.AddForce(jump * jumpForce, ForceMode.Impulse);
 				isGrounded = false;
 			}
-			
+
 			//MouseLook();
 
-			/*if (Input.GetMouseButtonDown(0)) {
-				ShootButton();
-				Debug.Log("update" + AmmoCount);
-			}
-			
-			if(Input.GetKeyDown("r")) {
+			//Debug.Log(OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger));
+
+			if (OVRInput.GetDown(OVRInput.Touch.Two))
+			{
+                ShootButton();
+                Debug.Log("update" + AmmoCount);
+            }
+
+            if (OVRInput.GetDown(OVRInput.Touch.Four)) {
 				ReloadButton();
-			}*/
+			}
         }
         else
         {
@@ -162,9 +171,12 @@ public class PlayerController : NetworkBehaviour {
 
 
 	private void MoveInput() {
+
+		Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+
 		//Input
-		if (Input.GetAxis("Horizontal") != Mathf.Epsilon || Input.GetAxis("Vertical") != Mathf.Epsilon)	{
-			Vector3 movementDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+		if (stick.x != 0.0f || stick.y != 0.0f)	{
+			Vector3 movementDirection = new Vector3(stick.x, 0, stick.y);
 			movementDirection *= PlayerSpeed;
 			movementDirection = Vector3.ClampMagnitude(movementDirection, PlayerSpeed);
 
@@ -186,12 +198,59 @@ public class PlayerController : NetworkBehaviour {
 		//weaponArm.localEulerAngles = new Vector3(xRotation, 0, 0);
 		Camera.main.transform.localEulerAngles = new Vector3(xRotation, 0, 0);
 	}
-	
-	
-	
-	
-	
-	
+
+	/*private void VRInput()
+	{
+
+		Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+
+		//Input
+		if (stick.x != Mathf.Epsilon || stick.y != Mathf.Epsilon)
+		{
+			Vector3 movementDirection = new Vector3(stick.x, 0, CanvasManager.instance.leftJoystick.Vertical);
+			movementDirection *= PlayerSpeed;
+			movementDirection = Vector3.ClampMagnitude(movementDirection, PlayerSpeed);
+
+			if (rb.velocity.magnitude < PlayerSpeedMax)
+				rb.AddRelativeForce(movementDirection * Time.deltaTime * 100);
+		}
+
+		//Rotation
+		if (stick.x != Mathf.Epsilon || CanvasManager.instance.rightJoystick.Vertical != Mathf.Epsilon)
+		{
+			float rotY = stick.x * sensitivityY;
+			float rotX = -CanvasManager.instance.rightJoystick.Vertical * sensitivityX;
+
+			//Body rotation
+			transform.Rotate(0, rotY, 0);
+
+			//Camera rotation
+			xRotation = Mathf.Clamp(xRotation + rotX, minCameraX, maxCameraX);
+			weaponArm.localEulerAngles = new Vector3(xRotation, 0, 0);
+			Camera.main.transform.localEulerAngles = new Vector3(xRotation, 0, 0);
+		}
+
+		if (stick.x != Mathf.Epsilon || CanvasManager.instance.shootJoystick.Vertical != Mathf.Epsilon)
+		{
+			float rotY = stick.x * sensitivityY;
+			float rotX = -CanvasManager.instance.shootJoystick.Vertical * sensitivityX;
+
+			//Body rotation
+			transform.Rotate(0, rotY, 0);
+
+			//Camera rotation
+			xRotation = Mathf.Clamp(xRotation + rotX, minCameraX, maxCameraX);
+			weaponArm.localEulerAngles = new Vector3(xRotation, 0, 0);
+			Camera.main.transform.localEulerAngles = new Vector3(xRotation, 0, 0);
+		}
+	}*/
+
+
+
+
+
+
+
 	//
 	// SHOOTING
 	//
