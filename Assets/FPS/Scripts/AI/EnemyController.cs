@@ -17,6 +17,10 @@ namespace Unity.FPS.AI
             return PatrolPath && PatrolPath.PathNodes.Count > 0;
         }
 
+        public void ResetPathDestination() {
+            m_PathDestinationNodeIndex = 0;
+        }
+
         public void SetPathDestinationToClosestNode() {
             if (IsPathValid()) {
                 int closestPathNodeIndex = 0;
