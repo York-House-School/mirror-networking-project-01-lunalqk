@@ -48,10 +48,10 @@ namespace Unity.FPS.Gameplay {
 			}
 		}
 		public float GetLookInputsHorizontal() {
-			return GetMouseOrStickLookAxis(GameConstants.k_MouseAxisNameHorizontal, GameConstants.k_AxisNameJoystickLookHorizontal);
+			return GetMouseOrStickLookAxis(GameConstants.k_MouseAxisNameHorizontal);
 		}
 		public float GetLookInputsVertical() {
-			return GetMouseOrStickLookAxis(GameConstants.k_MouseAxisNameVertical, GameConstants.k_AxisNameJoystickLookVertical);
+			return GetMouseOrStickLookAxis(GameConstants.k_MouseAxisNameVertical	);
 		}
 		public bool GetJumpInputDown() {
 			if (CanProcessInput()) {
@@ -125,6 +125,8 @@ namespace Unity.FPS.Gameplay {
 					return -1;
 				else if (Input.GetAxis(GameConstants.k_ButtonNameNextWeapon) < 0f)
 					return 1;
+				else
+					return 0;
 			} else {
 				return 0;
 			}
