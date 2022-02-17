@@ -13,13 +13,24 @@ namespace Unity.FPS.AI
             Attack,
         }
 
+        public Animator Animator;
+
         [Tooltip("Fraction of the enemy's attack range at which it will stop moving towards target while attacking")]
         [Range(0f, 1f)]
         public float AttackStopDistanceRatio = 0.5f;
 
+        [Tooltip("The random hit damage effects")]
+        public ParticleSystem[] RandomHitSparks;
+
+        public ParticleSystem[] OnDetectVfx;
+        public AudioClip OnDetectSfx;
+
+        [Header("Sound")] public AudioClip MovementSound;
+        public MinMaxFloat PitchDistortionMovementSpeed;
 
         public AIState AiState { get; private set; }
         EnemyController m_EnemyController;
+        AudioSource m_AudioSource;
 
         const string k_AnimMoveSpeedParameter = "MoveSpeed";
         const string k_AnimAttackParameter = "Attack";
@@ -29,7 +40,8 @@ namespace Unity.FPS.AI
         void Start()
         {
             m_EnemyController = GetComponent<EnemyController>();
-            //DebugUtility.HandleErrorIfNullGetComponent<EnemyController, EnemyMobile>(m_EnemyController, this, gameObject);
+            DebugUtility.HandleErrorIfNullGetComponent<EnemyController, EnemyMobile>(m_EnemyController, this,
+                gameObject);
 
             m_EnemyController.onAttack += OnAttack;
             m_EnemyController.onDetectedTarget += OnDetectedTarget;
@@ -39,6 +51,12 @@ namespace Unity.FPS.AI
 
             // Start patrolling
             AiState = AIState.Patrol;
+
+            // adding a audio source to play the movement sound on it
+            m_AudioSource = GetComponent<AudioSource>();
+            DebugUtility.HandleErrorIfNullGetComponent<AudioSource, EnemyMobile>(m_AudioSource, this, gameObject);
+            m_AudioSource.clip = MovementSound;
+            m_AudioSource.Play();
         }
 
         void Update()
@@ -47,6 +65,13 @@ namespace Unity.FPS.AI
             UpdateCurrentAiState();
 
             float moveSpeed = m_EnemyController.NavMeshAgent.velocity.magnitude;
+
+            // Update animator speed parameter
+            Animator.SetFloat(k_AnimMoveSpeedParameter, moveSpeed);
+
+            // changing the pitch of the movement sound depending on the movement speed
+            m_AudioSource.pitch = Mathf.Lerp(PitchDistortionMovementSpeed.Min, PitchDistortionMovementSpeed.Max,
+                moveSpeed / m_EnemyController.NavMeshAgent.speed);
         }
 
         void UpdateAiStateTransitions()
@@ -108,7 +133,7 @@ namespace Unity.FPS.AI
 
         void OnAttack()
         {
-
+            Animator.SetTrigger(k_AnimAttackParameter);
         }
 
         void OnDetectedTarget()
@@ -117,6 +142,18 @@ namespace Unity.FPS.AI
             {
                 AiState = AIState.Follow;
             }
+
+            for (int i = 0; i < OnDetectVfx.Length; i++)
+            {
+                OnDetectVfx[i].Play();
+            }
+
+            if (OnDetectSfx)
+            {
+                AudioUtility.CreateSFX(OnDetectSfx, transform.position, AudioUtility.AudioGroups.EnemyDetection, 1f);
+            }
+
+            Animator.SetBool(k_AnimAlertedParameter, true);
         }
 
         void OnLostTarget()
@@ -125,11 +162,24 @@ namespace Unity.FPS.AI
             {
                 AiState = AIState.Patrol;
             }
+
+            for (int i = 0; i < OnDetectVfx.Length; i++)
+            {
+                OnDetectVfx[i].Stop();
+            }
+
+            Animator.SetBool(k_AnimAlertedParameter, false);
         }
 
         void OnDamaged()
         {
+            if (RandomHitSparks.Length > 0)
+            {
+                int n = Random.Range(0, RandomHitSparks.Length - 1);
+                RandomHitSparks[n].Play();
+            }
 
+            Animator.SetTrigger(k_AnimOnDamagedParameter);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Unity.FPS.AI
         protected virtual void Start()
         {
             m_ActorsManager = FindObjectOfType<ActorsManager>();
-            //DebugUtility.HandleErrorIfNullFindObject<ActorsManager, DetectionModule>(m_ActorsManager, this);
+            DebugUtility.HandleErrorIfNullFindObject<ActorsManager, DetectionModule>(m_ActorsManager, this);
         }
 
         public virtual void HandleTargetDetection(Actor actor, Collider[] selfColliders)

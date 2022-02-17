@@ -1,75 +1,87 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace Unity.FPS.Game {
-	public class Health : MonoBehaviour {
-		public float MaxHealth = 10f;
-		public float CriticalHealthRatio = 0.3f;
+namespace Unity.FPS.Game
+{
+    public class Health : MonoBehaviour
+    {
+        [Tooltip("Maximum amount of health")] public float MaxHealth = 10f;
 
-		public UnityAction<float, GameObject> OnDamaged;
-		public UnityAction<float> OnHealed;
-		public UnityAction OnDie;
+        [Tooltip("Health ratio at which the critical health vignette starts appearing")]
+        public float CriticalHealthRatio = 0.3f;
 
-		public float CurrentHealth { get; set; }
-		public bool Invincible { get; set; }
-		public bool CanPickup() => CurrentHealth < MaxHealth;
+        public UnityAction<float, GameObject> OnDamaged;
+        public UnityAction<float> OnHealed;
+        public UnityAction OnDie;
 
-		public float GetRatio() => CurrentHealth / MaxHealth;
-		public bool IsCritical() => GetRatio() <= CriticalHealthRatio;
+        public float CurrentHealth { get; set; }
+        public bool Invincible { get; set; }
+        public bool CanPickup() => CurrentHealth < MaxHealth;
 
-		bool m_IsDead;
+        public float GetRatio() => CurrentHealth / MaxHealth;
+        public bool IsCritical() => GetRatio() <= CriticalHealthRatio;
 
-		void Start() {
-			CurrentHealth = MaxHealth;
-		}
+        bool m_IsDead;
 
-		public void Heal(float healAmount) {
-			float healthBefore = CurrentHealth;
-			CurrentHealth += healAmount;
-			CurrentHealth = Mathf.Clamp(CurrentHealth, 0f, MaxHealth);
+        void Start()
+        {
+            CurrentHealth = MaxHealth;
+        }
 
-			// call OnHeal action
-			float trueHealAmount = CurrentHealth - healthBefore;
-			if (trueHealAmount > 0f) {
-				OnHealed?.Invoke(trueHealAmount);
-			}
-		}
+        public void Heal(float healAmount)
+        {
+            float healthBefore = CurrentHealth;
+            CurrentHealth += healAmount;
+            CurrentHealth = Mathf.Clamp(CurrentHealth, 0f, MaxHealth);
 
-		public void TakeDamage(float damage, GameObject damageSource) {
-			if (Invincible)
-				return;
+            // call OnHeal action
+            float trueHealAmount = CurrentHealth - healthBefore;
+            if (trueHealAmount > 0f)
+            {
+                OnHealed?.Invoke(trueHealAmount);
+            }
+        }
 
-			float healthBefore = CurrentHealth;
-			CurrentHealth -= damage;
-			CurrentHealth = Mathf.Clamp(CurrentHealth, 0f, MaxHealth);
+        public void TakeDamage(float damage, GameObject damageSource)
+        {
+            if (Invincible)
+                return;
 
-			// call OnDamage action
-			float trueDamageAmount = healthBefore - CurrentHealth;
-			if (trueDamageAmount > 0f) {
-				OnDamaged?.Invoke(trueDamageAmount, damageSource);
-			}
+            float healthBefore = CurrentHealth;
+            CurrentHealth -= damage;
+            CurrentHealth = Mathf.Clamp(CurrentHealth, 0f, MaxHealth);
 
-			HandleDeath();
-		}
+            // call OnDamage action
+            float trueDamageAmount = healthBefore - CurrentHealth;
+            if (trueDamageAmount > 0f)
+            {
+                OnDamaged?.Invoke(trueDamageAmount, damageSource);
+            }
 
-		public void Kill() {
-			CurrentHealth = 0f;
+            HandleDeath();
+        }
 
-			// call OnDamage action
-			OnDamaged?.Invoke(MaxHealth, null);
+        public void Kill()
+        {
+            CurrentHealth = 0f;
 
-			HandleDeath();
-		}
+            // call OnDamage action
+            OnDamaged?.Invoke(MaxHealth, null);
 
-		void HandleDeath() {
-			if (m_IsDead)
-				return;
+            HandleDeath();
+        }
 
-			// call OnDie action
-			if (CurrentHealth <= 0f) {
-				m_IsDead = true;
-				OnDie?.Invoke();
-			}
-		}
-	}
+        void HandleDeath()
+        {
+            if (m_IsDead)
+                return;
+
+            // call OnDie action
+            if (CurrentHealth <= 0f)
+            {
+                m_IsDead = true;
+                OnDie?.Invoke();
+            }
+        }
+    }
 }
