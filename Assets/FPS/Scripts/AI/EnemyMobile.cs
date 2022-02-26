@@ -138,6 +138,9 @@ namespace Unity.FPS.AI
 
         void OnDetectedTarget()
         {
+            Debug.Log("see target");
+
+
             if (AiState == AIState.Patrol)
             {
                 AiState = AIState.Follow;

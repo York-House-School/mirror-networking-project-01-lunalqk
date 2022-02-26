@@ -384,6 +384,7 @@ namespace Unity.FPS.AI
 
             if (DetectionModule != null)
             {
+                Debug.Log("Detection module found");
                 // Detection range
                 Gizmos.color = DetectionRangeColor;
                 Gizmos.DrawWireSphere(transform.position, DetectionModule.DetectionRange);
