@@ -66,6 +66,8 @@ namespace Unity.FPS.AI
 
             float moveSpeed = m_EnemyController.NavMeshAgent.velocity.magnitude;
 
+            Debug.Log(moveSpeed);
+
             // Update animator speed parameter
             Animator.SetFloat(k_AnimMoveSpeedParameter, moveSpeed);
 
