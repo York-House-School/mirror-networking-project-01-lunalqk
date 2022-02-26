@@ -70,7 +70,7 @@ GameObject:
   m_Layer: 0
   m_Name: Enemy_HoverBot
   m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -170,6 +170,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Animator: {fileID: 320366457759794871}
   AttackStopDistanceRatio: 0.08
+  PatrolMovementSpeed: 3.5
+  FollowMovementSpeed: 3.5
   RandomHitSparks:
   - {fileID: 9125706537325074547}
   - {fileID: 8158939429672774431}
@@ -1482,6 +1484,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ColorModule.gradient.maxGradient.m_NumColorKeys
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7951582856014658560, guid: 3f5b545b9a1e74c418b061bba5bb9e2c,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f5b545b9a1e74c418b061bba5bb9e2c, type: 3}

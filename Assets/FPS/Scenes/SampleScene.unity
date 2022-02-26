@@ -714,11 +714,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2015434656898269652, guid: 25a1b0efadb966e44889fce712c8ff8d,
         type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2015434656898269652, guid: 25a1b0efadb966e44889fce712c8ff8d,
-        type: 3}
       propertyPath: m_Name
       value: Enemy_HoverBot
       objectReference: {fileID: 0}
@@ -776,21 +771,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4752156053906186385, guid: 25a1b0efadb966e44889fce712c8ff8d,
-        type: 3}
-      propertyPath: FollowMovementSpeed
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4752156053906186385, guid: 25a1b0efadb966e44889fce712c8ff8d,
-        type: 3}
-      propertyPath: PatrolMovementSpeed
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5960346955183252710, guid: 25a1b0efadb966e44889fce712c8ff8d,
-        type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25a1b0efadb966e44889fce712c8ff8d, type: 3}
@@ -911,7 +891,7 @@ PrefabInstance:
     - target: {fileID: 3618073690566000147, guid: e6a248737cdb8a247ad378f70cd1c2e7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.05
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 3618073690566000147, guid: e6a248737cdb8a247ad378f70cd1c2e7,
         type: 3}
@@ -957,6 +937,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy_CyberSoldier
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634918862473864081, guid: e6a248737cdb8a247ad378f70cd1c2e7,
+        type: 3}
+      propertyPath: RandomHitSparks.Array.size
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6a248737cdb8a247ad378f70cd1c2e7, type: 3}
