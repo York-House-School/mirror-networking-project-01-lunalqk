@@ -79,7 +79,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 4a06a5426b7ed4746a566a35097f96ba, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -480,7 +480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelfDestructYHeight: -20
   PathReachingRadius: 2
-  OrientationSpeed: 10
+  OrientationSpeed: 15
   DeathDuration: 0
   SwapToNextWeapon: 0
   DelayAfterWeaponSwap: 0
@@ -519,13 +519,14 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   FlashOnHitDuration: 0.5
   DamageTick: {fileID: 0}
-  DeathVfx: {fileID: 0}
-  DeathVfxSpawnPoint: {fileID: 0}
+  DeathVfx: {fileID: 8950624839484268180, guid: 45ce85b82008be84287f2c7e5bf07647,
+    type: 3}
+  DeathVfxSpawnPoint: {fileID: 1311775035979792419}
   LootPrefab: {fileID: 0}
   DropRate: 1
   PathReachingRangeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   AttackRangeColor: {r: 1, g: 0, b: 0, a: 1}
-  DetectionRangeColor: {r: 0, g: 0, b: 1, a: 1}
+  DetectionRangeColor: {r: 1, g: 0, b: 0.91397, a: 1}
 --- !u!114 &5634918862473864081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,7 +561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e27364eefd6dd0341ba72a3bfc0d9727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
+  MaxHealth: 200
   CriticalHealthRatio: 0.3
 --- !u!114 &6039997344689893238
 MonoBehaviour:
@@ -574,9 +575,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88567379ffc126c4e96b34011148ffa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: {fileID: 0}
-  HealthBarImage: {fileID: 0}
-  HealthBarPivot: {fileID: 0}
+  Health: {fileID: 1506832671669780538}
+  HealthBarImage: {fileID: 1087406408018317622}
+  HealthBarPivot: {fileID: 5844148672462698456}
   HideFullHealthBar: 1
 --- !u!195 &6537964920696740425
 NavMeshAgent:
@@ -588,11 +589,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 8
+  m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.2
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -650,7 +651,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 9.623508
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -1842,7 +1843,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8994762139297547447}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.42, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3618073690566000147}
@@ -1861,9 +1862,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DetectionSourcePoint: {fileID: 8613300297844715563}
-  DetectionRange: 20
-  AttackRange: 10
-  KnownTargetTimeout: 5
+  DetectionRange: 10
+  AttackRange: 5
+  KnownTargetTimeout: 10
   Animator: {fileID: 0}
 --- !u!1001 &2209369570708917995
 PrefabInstance:
@@ -2115,6 +2116,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78de6dfde7b72484cba2b7cdf5bf1ce1, type: 3}
+--- !u!114 &1087406408018317622 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9021369743748893695, guid: 78de6dfde7b72484cba2b7cdf5bf1ce1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8225096438832847561}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5844148672462698456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2540030056479321361, guid: 78de6dfde7b72484cba2b7cdf5bf1ce1,

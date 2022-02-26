@@ -315,6 +315,12 @@ namespace Unity.FPS.AI
             }
         }
 
+        public void SetNavMovementSpeed(float speed) {
+            if (NavMeshAgent) {
+                NavMeshAgent.speed = speed;
+            }
+        }
+
         public void UpdatePathDestination(bool inverseOrder = false)
         {
             if (IsPathValid())

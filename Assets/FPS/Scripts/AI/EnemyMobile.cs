@@ -19,6 +19,9 @@ namespace Unity.FPS.AI
         [Range(0f, 1f)]
         public float AttackStopDistanceRatio = 0.5f;
 
+        public float PatrolMovementSpeed = 5.5f;
+        public float FollowMovementSpeed = 8.5f;
+
         [Tooltip("The random hit damage effects")]
         public ParticleSystem[] RandomHitSparks;
 
@@ -107,11 +110,17 @@ namespace Unity.FPS.AI
                 case AIState.Patrol:
                     m_EnemyController.UpdatePathDestination();
                     m_EnemyController.SetNavDestination(m_EnemyController.GetDestinationOnPath());
+
+                    m_EnemyController.SetNavMovementSpeed(PatrolMovementSpeed);
+
                     break;
                 case AIState.Follow:
                     m_EnemyController.SetNavDestination(m_EnemyController.KnownDetectedTarget.transform.position);
                     m_EnemyController.OrientTowards(m_EnemyController.KnownDetectedTarget.transform.position);
                     m_EnemyController.OrientWeaponsTowards(m_EnemyController.KnownDetectedTarget.transform.position);
+
+                    m_EnemyController.SetNavMovementSpeed(FollowMovementSpeed);
+
                     break;
                 case AIState.Attack:
                     if (Vector3.Distance(m_EnemyController.KnownDetectedTarget.transform.position,
