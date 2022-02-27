@@ -134,6 +134,8 @@ namespace Unity.FPS.AI
                         m_EnemyController.SetNavDestination(transform.position);
                     }
 
+                    m_EnemyController.SetNavMovementSpeed(0);
+
                     m_EnemyController.OrientTowards(m_EnemyController.KnownDetectedTarget.transform.position);
                     m_EnemyController.TryAtack(m_EnemyController.KnownDetectedTarget.transform.position);
                     break;
@@ -142,6 +144,8 @@ namespace Unity.FPS.AI
 
         void OnAttack()
         {
+            
+
             Animator.SetTrigger(k_AnimAttackParameter);
         }
 
