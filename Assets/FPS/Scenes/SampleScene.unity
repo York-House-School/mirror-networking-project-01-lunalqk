@@ -938,10 +938,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_CyberSoldier
       objectReference: {fileID: 0}
-    - target: {fileID: 5634918862473864081, guid: e6a248737cdb8a247ad378f70cd1c2e7,
-        type: 3}
-      propertyPath: RandomHitSparks.Array.size
-      value: 4
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6a248737cdb8a247ad378f70cd1c2e7, type: 3}
