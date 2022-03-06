@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 27dd14bf521b45642a331177dab1da3e,
+    type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 2b072c1fd103fe045bcd649a5b6f4a4c,
     type: 2}
 --- !u!196 &4
@@ -442,7 +443,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -740,7 +741,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: c11cae212bea88147bb1032248b3fb00, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: e77bfb5eb89000e4bbdaa9b4764b0465, type: 2}
 --- !u!4 &947528583
 Transform:
   m_ObjectHideFlags: 0
